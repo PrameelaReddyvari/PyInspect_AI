@@ -1,0 +1,293 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>PyInspect AI - Python Code Analyzer</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+            padding: 25px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            color: #2563eb;
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            color: #64748b;
+        }
+
+        .main-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.07);
+            margin-bottom: 25px;
+        }
+
+        h2 {
+            margin-bottom: 15px;
+            color: #1e40af;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 260px;
+            padding: 15px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-family: Consolas, monospace;
+            font-size: 15px;
+            resize: vertical;
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+
+        textarea:focus {
+            outline: 2px solid #3b82f6;
+        }
+
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 13px;
+            border: none;
+            border-radius: 7px;
+            background: #2563eb;
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover:not(:disabled) {
+            background: #1d4ed8;
+        }
+
+        button:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+
+        .bug-button {
+            background: #dc2626;
+        }
+
+        .bug-button:hover:not(:disabled) {
+            background: #b91c1c;
+        }
+
+        .output-section {
+            margin-top: 20px;
+        }
+
+        .result-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 12px;
+            overflow-wrap: anywhere;
+        }
+
+        .result-card h4 {
+            color: #1d4ed8;
+            margin-bottom: 10px;
+        }
+
+        .result-card p {
+            margin: 7px 0;
+            line-height: 1.5;
+        }
+
+        .empty-message {
+            color: #64748b;
+            margin-top: 10px;
+        }
+
+        footer {
+            text-align: center;
+            color: #64748b;
+            margin-top: 30px;
+            padding: 15px;
+        }
+
+        @media (max-width: 650px) {
+            body {
+                padding: 12px;
+            }
+
+            header h1 {
+                font-size: 27px;
+            }
+
+            .button-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .main-card {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <header>
+        <h1>PyInspect AI</h1>
+        <p>AI-Powered Python Code Analysis and Learning Platform</p>
+    </header>
+
+    <!-- Python Code Input -->
+    <div class="main-card">
+
+        <h2>Enter Your Python Code</h2>
+
+        <textarea
+            id="codeInput"
+            placeholder="Write or paste your Python code here..."
+        ></textarea>
+
+        <!-- Feature Buttons -->
+        <div class="button-grid">
+
+            <button
+                type="button"
+                id="analyzeBtn"
+                onclick="analyzeCode()">
+                Analyze Code
+            </button>
+
+            <button
+                type="button"
+                id="aiExplainBtn"
+                onclick="explainWithAI()">
+                AI Explanation
+            </button>
+
+            <button
+                type="button"
+                id="qualityBtn"
+                onclick="checkCodeQuality()">
+                Code Quality Score
+            </button>
+
+            <button
+                type="button"
+                id="traceBtn"
+                onclick="traceExecution()">
+                Visual Execution Tracker
+            </button>
+
+            <button
+                type="button"
+                id="practiceBtn"
+                onclick="generatePractice()">
+                Python Practice Generator
+            </button>
+
+            <button
+                type="button"
+                id="bugPredictBtn"
+                class="bug-button"
+                onclick="predictBugs()">
+                Smart Bug Predictor
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- Feature 1: Code Analysis -->
+    <div class="main-card output-section">
+        <h2>1. Python Code Analysis</h2>
+        <div id="results" class="result-card">
+            <p class="empty-message">Code analysis results will appear here.</p>
+        </div>
+    </div>
+
+    <!-- Feature 2: AI Explanation -->
+    <div class="main-card output-section">
+        <h2>2. AI Explanation</h2>
+        <div id="aiResults" class="result-card">
+            <p class="empty-message">AI explanations will appear here.</p>
+        </div>
+    </div>
+
+    <!-- Feature 3: Quality Score -->
+    <div class="main-card output-section">
+        <h2>3. Code Quality Score</h2>
+        <div id="qualityResults" class="result-card">
+            <p class="empty-message">Quality score will appear here.</p>
+        </div>
+    </div>
+
+    <!-- Feature 4: Execution Tracker -->
+    <div class="main-card output-section">
+        <h2>4. Visual Execution Tracker</h2>
+        <div id="executionResults" class="result-card">
+            <p class="empty-message">Execution steps will appear here.</p>
+        </div>
+    </div>
+
+    <!-- Feature 5: Practice Generator -->
+    <div class="main-card output-section">
+        <h2>5. AI Python Practice Generator</h2>
+        <div id="practiceResults" class="result-card">
+            <p class="empty-message">Practice questions will appear here.</p>
+        </div>
+    </div>
+
+    <!-- Feature 6: Smart Bug Predictor -->
+    <div class="main-card output-section">
+        <h2>6. Smart Bug Predictor</h2>
+        <div id="bugResults" class="result-card">
+            <p class="empty-message">Potential bug detection results will appear here.</p>
+        </div>
+    </div>
+
+    <footer>
+        <p>PyInspect AI | Intelligent Python Code Analysis Platform</p>
+    </footer>
+
+</div>
+
+<!-- JavaScript -->
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</body>
+</html>
